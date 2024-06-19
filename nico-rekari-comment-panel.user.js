@@ -576,7 +576,7 @@
       setTimeout(appendCommentList, 250);
       return;
     }
-    elmPage.setAttribute("style", elmPage.getAttribute("style") + ";--max-player-width: 1200px;");
+    elmPage.setAttribute("style", elmPage.getAttribute("style") + ";--max-player-width: 1200px; width: auto; max-width: unset;");
 
     const elmColContainer = document.createElement("div");
     elmColContainer.setAttribute("style", "display: grid; grid-template-columns: 2fr 1fr;");
@@ -589,7 +589,30 @@
     elmColContainer.appendChild(elmColRight);
 
     elmPlayer.setAttribute("style", "margin-left: 0; margin-right: 0; border-radius: 0; width: 100%; box-shadow: none");
-    elmPlayer.children[3].setAttribute("style", "height: 42px");
+    const elmControler = elmPlayer.children[3];
+    elmControler.setAttribute("style", "height: 42px; gap: 10px; padding: 0 10px;");
+    const grow1 = elmControler.querySelector(".grow_1");
+    const repeatButton = elmControler.querySelectorAll(".w_24px.h_24px.fill_\\#fff.cursor_pointer.\\[\\&_svg\\]\\:w_24px.\\[\\&_svg\\]\\:h_24px.\\[\\&_svg\\]\\:fill_\\#fff.\\[\\&_svg\\]\\:cursor_pointer")[2];
+    grow1.insertAdjacentElement("afterend", repeatButton)
+
+    const elmControlerObserver = new MutationObserver((mutations, observer) => {
+      mutations.forEach(mutation => {
+        if (mutation.type == "childList" && mutation.addedNodes.length == 1) {
+          /** @type HTMLDivElement */
+          const timeText = mutation.addedNodes.item(0);
+          const classList = ["text_#fff", "fs_12", "font_alnum", "select_none"]
+          Array.from(timeText.classList).forEach(s => console.log(s))
+          if (Array.from(timeText.classList).every(s => classList.includes(s))) {
+            timeText.setAttribute("style", "flex-grow: 1; text-align: center;");
+            /** @type HTMLDivElement */
+            const target = mutation.target
+            target.querySelector(".grow_1").remove();
+            observer.disconnect();
+          }
+        }
+      });
+    });
+    elmControlerObserver.observe(elmControler, { childList: true });
 
     // コメント投稿時に挿入される Cloudflare Turnstile 用 iframe は
     // elmPlayer の要素位置を基準にしているようなので、元の要素は残しておく
