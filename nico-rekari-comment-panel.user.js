@@ -52,7 +52,6 @@
   display: grid;
   grid-template-columns: minmax(180px, auto) 80px 180px;
   width: calc(max(100%, 260px) + 180px);
-  user-select: none;
 }
 
 .nicopane-cmtlst-row:hover {
@@ -603,7 +602,7 @@
           const classList = ["text_#fff", "fs_12", "font_alnum", "select_none"]
           Array.from(timeText.classList).forEach(s => console.log(s))
           if (Array.from(timeText.classList).every(s => classList.includes(s))) {
-            timeText.setAttribute("style", "flex-grow: 1; text-align: center;");
+            timeText.setAttribute("style", "flex-grow: 1; text-align: center; user-select: text;");
             /** @type HTMLDivElement */
             const target = mutation.target
             target.querySelector(".grow_1").remove();
